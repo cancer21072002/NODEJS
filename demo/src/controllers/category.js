@@ -28,12 +28,20 @@ export const list = async(req, res) => {
 };
 export const read = async(req, res) => {
     // get all
-    const category = await Category.findOne({slug: req.params.slug}).exec();
-    const products = await Product.find({category:category}).populate('category').select('-category').exec();
-    console.log('products', products);
-    res.json({
-        
-    })
-
-    
+    try {
+        const category = await Category.findOne({ slug: req.params.slug }).exec();
+        const products = await Product.find({ category: category })
+            .populate("category")
+            .select("-category")
+            .exec();
+        console.log("products", products);
+        res.json({
+            category,
+            products,
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: "Lỗi",
+        });
+    }
 };
